@@ -31,7 +31,7 @@ PY := $(CHAPTERS:.rst=.py)
 BIBTEX_FILE = ../refs.bib
 
 PYTHON = python
-PDFLATEX = TEXINPUTS=".:..:ucs:" pdflatex -halt-on-error
+PDFLATEX = TEXINPUTS=".:..:" xelatex -halt-on-error
 EXAMPLES = ../examples.py
 LATEXHACKS = ../latexhacks.py
 DOCTEST_SPLIT = ../doctest_split.py 
@@ -62,7 +62,8 @@ RSTHACKS = $(PYTHON) ../rsthacks.py
 
 .SUFFIXES: .rst .rst2 .html .pdf .errs .py
 
-html: $(HTML) bibliography.html 
+html: $(HTML)
+# needs fixing: skip bibliography.html 
 
 help: usage
 usage:

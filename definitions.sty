@@ -1,18 +1,25 @@
-
-\usepackage{times}
+\usepackage{fontspec}
+\usepackage{graphicx}
+\usepackage{amssymb}
 \usepackage{boxedminipage}
+
+\setmainfont{DejaVu Serif}
+\setsansfont{DejaVu Sans}
+\setmonofont{DejaVu Sans Mono}
+
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{1ex}
 
+\newlength{\admonitionwidth}
+\setlength{\admonitionwidth}{0.95\linewidth}
+
 %%%%%%%% UNICODE SUPPORT %%%%%%%%
 
-\usepackage{ucs}
-\usepackage{pdffonts}
 \usepackage{color}
-\providecommand{\textalpha}{{\usefont{OML}{hlcm}{m}{n} \ensuremath{\alpha}}}
-\providecommand{\textbeta}{{\usefont{OML}{hlcm}{m}{n} \ensuremath{\beta}}}
-\providecommand{\textgamma}{{\usefont{OML}{hlcm}{m}{n} \ensuremath{\gamma}}}
-\providecommand{\textmu}{{\usefont{OML}{hlcm}{m}{n} \ensuremath{\mu}}}
+\providecommand{\textalpha}{{\ensuremath{\alpha}}}
+\providecommand{\textbeta}{{\ensuremath{\beta}}}
+\providecommand{\textgamma}{{\ensuremath{\gamma}}}
+\providecommand{\textmu}{{\ensuremath{\mu}}}
 
 \renewcommand{\labelitemi}{$\blacksquare$}
 
@@ -24,10 +31,10 @@
 
 %%%%%%%% HEADERS AND FOOTERS %%%%%%%%
 
-\usepackage{fancyheadings}
+\usepackage{fancyhdr}
 \pagestyle{fancy}
-\setlength{\headrulewidth}{0.5pt}
-\setlength{\footrulewidth}{0.5pt}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.5pt}
 
 \newcommand{\authors}{\small \emph{Bird, Klein \& Loper}}
 \newcommand{\booktitle}{\small \emph{Natural Language Processing (DRAFT)}}
@@ -42,6 +49,7 @@
 \lfoot [\thedate]   {\authors}
 \cfoot [\thepage]   {\thepage}
 
+\setlength{\headheight}{14pt}
 
 %%%%%%%% CUSTOM INLINE ROLES %%%%%%%%
 
