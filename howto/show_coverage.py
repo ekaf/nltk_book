@@ -32,7 +32,9 @@ def report_coverage(module):
     sys.stdout.flush()
     (fname, stmts, excluded, missing, fmt_missing, def_info) = (
         coverage.analysis3(module))
-    out = open(os.path.join(OUT_DIR, module.__name__+'.html'), 'wb')
+    # Open in text mode ('w') for Python 3 compatibility; color_coverage
+    # writes str HTML content.
+    out = open(os.path.join(OUT_DIR, module.__name__+'.html'), 'w', encoding='utf-8')
     color_coverage.colorize_file(fname, module.__name__, out,
                                  fmt_missing, def_info)
     out.close()
@@ -66,7 +68,9 @@ def main(filenames):
         print('Unable to create output directory %r: %s' % (OUT_DIR, e))
         return
 
-    out = open('coverage-list.txt', 'wb')
+    # Open in text mode ('w') for Python 3 compatibility; HEAD/FOOT/listing
+    # are str, not bytes.
+    out = open('coverage-list.txt', 'w', encoding='utf-8')
     out.write(HEAD)
 
     # Construct a coverage file for each NLTK module.
