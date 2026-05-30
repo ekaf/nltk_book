@@ -1169,6 +1169,11 @@ passed in as a parameter, and it also prints a list of the
    'or', 'united', 'a', 'state', 'by', 'for', 'any', '=', 'which', 'president',
    'all', 'on', 'may', 'such', 'as', 'have', ')', '(', 'congress']
 
+.. note:: **NLTK Security Model (NLTK >= 3.10)**
+   Under ``nltk.pathsec`` strict enforcement, outbound URL access via
+   ``request.urlopen`` may be restricted to an allowlisted set of hosts.
+   See `NLTK PR #3522 <https://github.com/nltk/nltk/pull/3522>`_ for details.
+
 This function has a number of problems.
 The function has two side-effects: it modifies the contents of its second
 parameter, and it prints a selection of the results it has computed.
@@ -1196,6 +1201,11 @@ and simplify its interface by dropping the ``freqdist`` parameter.
    ['the', ',', 'of', 'and', 'shall', '.', 'be', 'to', ';', 'in', 'states',
    'or', 'united', 'a', 'state', 'by', 'for', 'any', '=', 'which', 'president',
    'all', 'on', 'may', 'such', 'as', 'have', ')', '(', 'congress']
+
+.. note:: **NLTK Security Model (NLTK >= 3.10)**
+   Under ``nltk.pathsec`` strict enforcement, outbound URL access via
+   ``request.urlopen`` may be restricted to an allowlisted set of hosts.
+   See `NLTK PR #3522 <https://github.com/nltk/nltk/pull/3522>`_ for details.
 
 The readability and usability of the ``freq_words`` function is improved.
 

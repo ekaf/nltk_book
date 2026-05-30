@@ -7,6 +7,8 @@ import re
 _SCALE_RE = b'(:scale:\s+)(\d+):(\d+):(\d+)'
 
 def process(file, format):
+    # Note: 'file' must be a relative CWD path to comply with nltk.pathsec
+    # sentinel (NLTK >= 3.10). See: https://github.com/nltk/nltk/pull/3522
     contents = open(file, 'rb').read()
     if format == "html":
         contents = re.sub(_SCALE_RE, r'\1\2', contents)

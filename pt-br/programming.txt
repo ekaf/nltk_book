@@ -321,14 +321,14 @@ Acessando arquivos e a web
 É fácil acessar arquivos locais e páginas web dentro do Python. Eis alguns
 exemplos:
 
-  >>> print open('corpus.txt').read() 
+  >>> print(open('corpus.txt').read())
   Hello world.  This is a test file.
 
-  >>> from urllib import urlopen
+  >>> from urllib.request import urlopen
   >>> page = urlopen("http://news.bbc.co.uk/").read()
   >>> page = re.sub('<[^>]*>', '', page)   # remove a marcação HTML
   >>> page = re.sub('\s+', ' ', page)      # remove espaços
-  >>> print page[:60]
+  >>> print(page[:60])
   BBC NEWS | News Front Page News Sport Weather World Service
 
 -----------------

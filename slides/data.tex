@@ -150,9 +150,9 @@ dict.csv:
 "wake","weik","intrans","cease to sleep"
 
     >>> import csv
-    >>> file = open("dict.csv", "rb")
+    >>> file = open("dict.csv", "r", newline='')
     >>> for row in csv.reader(file):
-    ...     print row
+    ...     print(row)
     ['sleep', 'sli:p', 'v.i', 'a condition of body and mind ...']
     ['walk', 'wo:k', 'v.intr', 'progress by lifting and setting down each foot ...']
     ['wake', 'weik', 'intrans', 'cease to sleep']
@@ -173,7 +173,7 @@ dict.csv:
             defn_words.union(defn.split())
         return sorted(defn_words.difference(lexemes))
         
-    >>> print undefined_words("dict.csv")
+    >>> print(undefined_words("dict.csv"))
     ['...', 'a', 'and', 'body', 'by', 'cease',
      'condition', 'down', 'each', 'foot',
      'lifting', 'mind', 'of', 'progress',
@@ -186,8 +186,8 @@ dict.csv:
 
 \scriptsize
 \begin{verbatim}
->>> import urllib, nltk
->>> html = urllib.urlopen('http://en.wikipedia.org/').read()
+>>> from urllib.request import urlopen
+>>> html = urlopen('http://en.wikipedia.org/').read()
 >>> text = nltk.clean_html(html)
 >>> text.split()
 ['Wikimedia', 'Error', 'WIKIMEDIA', 'FOUNDATION', 'Fout', 'Fel',

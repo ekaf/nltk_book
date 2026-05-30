@@ -83,6 +83,13 @@ Finnish, French, German, Italian, Portuguese and Spanish (with more than
 Text number 2554 is an English translation of *Crime and Punishment*,
 and we can access it as follows.
 
+.. note:: **NLTK Security Model (NLTK >= 3.10)**
+   NLTK's security sentinel (``nltk.pathsec``) may restrict direct file and
+   network access when ``ENFORCE = True``. Calls to ``urllib.request.urlopen``
+   and ``open()`` on paths outside the current working directory or
+   ``nltk.data.path`` roots will raise a ``SecurityError`` in strict mode.
+   See `NLTK PR #3522 <https://github.com/nltk/nltk/pull/3522>`_ for details.
+
     >>> from urllib import request
     >>> url = "http://www.gutenberg.org/files/2554/2554-0.txt"
     >>> response = request.urlopen(url)
@@ -317,6 +324,13 @@ and use this as the basis for our |NLP| work.
 
 Reading Local Files
 -------------------
+
+.. note:: **NLTK Security Model (NLTK >= 3.10)**
+   NLTK's security sentinel (``nltk.pathsec``) may restrict ``open()`` calls
+   on paths outside the current working directory or ``nltk.data.path`` roots
+   when ``ENFORCE = True``. Ensure file paths are relative to CWD or are
+   listed in ``nltk.data.path``.
+   See `NLTK PR #3522 <https://github.com/nltk/nltk/pull/3522>`_ for details.
 
 .. Monkey-patching to fake the file/web examples in this section:
 

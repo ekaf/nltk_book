@@ -1,8 +1,12 @@
 
 import sys, os, re
+# Note: nltk.test.coverage and color_coverage are legacy dependencies
+# that may not be available in current environments.
 import nltk.test.coverage as coverage
 import color_coverage
 
+# Note: OUT_DIR must remain a relative path (within CWD) to comply
+# with nltk.pathsec (NLTK >= 3.10). See: https://github.com/nltk/nltk/pull/3522
 OUT_DIR = 'coverage'
 MODULE_RE = re.compile(r'nltk.*')
 
@@ -58,17 +62,17 @@ def main(filenames):
         coverage.the_coverage.merge_data(cexecuted)
 
     try: init_out_dir()
-    except Exception, e:
-        print 'Unable to create output directory %r: %s' % (OUT_DIR, e)
+    except Exception as e:
+        print('Unable to create output directory %r: %s' % (OUT_DIR, e))
         return
 
     out = open('coverage-list.txt', 'wb')
     out.write(HEAD)
 
     # Construct a coverage file for each NLTK module.
-    print '\nGenerating coverage summary files...\n'
-    print '  %-40s %s' % ('Module', 'Coverage')
-    print '  '+'-'*50
+    print('\nGenerating coverage summary files...\n')
+    print('  %-40s %s' % ('Module', 'Coverage'))
+    print('  '+'-'*50)
     for module_name, module in sorted(sys.modules.items()):
         if module is None: continue
         if MODULE_RE.match(module_name):

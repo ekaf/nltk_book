@@ -4,6 +4,9 @@
 
 import os, os.path, re, sys
 
+# Note: DOCTEST_SRC must be a relative path within CWD or an nltk.data.path
+# root to comply with nltk.pathsec (NLTK >= 3.10).
+# See: https://github.com/nltk/nltk/pull/3522
 DOCTEST_SRC = '../../nltk/test'
 
 HEAD = (".. ==========================================================\n"
@@ -39,7 +42,7 @@ def find_title(basename):
         regexp = '\A\s*(?:\.\..*\n)*'+regexp
         m = re.match(regexp, head)
         if m: return m.group(1).strip().replace('`', "'")
-    print 'Warning: no title found for %s' % basename
+    print('Warning: no title found for %s' % basename)
     return basename
 
 def linecount(basename):
@@ -75,7 +78,7 @@ def doctest_listing(sortkey=None):
                 result = '|%s|_' % basename
                 err_refs.append( (basename, num_failed) )
                 if sortkey is None:
-                    print ('test %s failed (%d examples)' %
+                    print('test %s failed (%d examples)' %
                            (basename, num_failed))
 
         title = find_title(basename)

@@ -62,6 +62,15 @@ if __name__ == "__main__":
         data = sys.stdin.read()
     else:
         filename = sys.argv[1]
+        # Note: Under NLTK's security sentinel (nltk.pathsec, NLTK >= 3.10),
+        # file paths must reside within the current working directory or an
+        # authorized nltk.data.path root to comply with path constraints.
+        # See: https://github.com/nltk/nltk/pull/3522
+        import os
+        if os.path.isabs(filename):
+            sys.stderr.write(
+                "Warning: absolute paths may be blocked by nltk.pathsec sentinel.\n"
+            )
         data = open(filename).read()
 
     INDENT = 2

@@ -13,9 +13,13 @@ This script extracts the pagecount from a latex log file.
 
 """
 
-from sys import argv
-from re import search
+import re
+import sys
+
+# Note: Under nltk.pathsec (NLTK >= 3.10), file paths must reside within
+# the current working directory or an authorized nltk.data.path root.
+# See: https://github.com/nltk/nltk/pull/3522
 
 regexp = r'\[(\d+)\][^\[]*$'       # last [nn] in file
-logfile = open(argv[1]).read()     # latex logfile
-print search(regexp, logfile).group(1)
+logfile = open(sys.argv[1]).read()  # latex logfile
+print(re.search(regexp, logfile).group(1))

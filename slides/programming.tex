@@ -296,12 +296,14 @@ Now inspect the dictionary:
 
 \begin{frame}[fragile]
 \frametitle{Accessing Files and the Web}
+% Note: Python 3 is required. open() paths must be relative to CWD to comply
+% with nltk.pathsec (NLTK >= 3.10). See: https://github.com/nltk/nltk/pull/3522
 \begin{itemize}
 \item accessing local files (create \texttt{corpus.txt} first)
 
 {\small
 \begin{verbatim}
-  >>> print open('corpus.txt').read() 
+  >>> print(open('corpus.txt').read())
   Hello world.  This is a test file.
 \end{verbatim}}
 
@@ -309,10 +311,10 @@ Now inspect the dictionary:
 
 {\small
 \begin{verbatim}
-  >>> from urllib import urlopen
+  >>> from urllib.request import urlopen
   >>> page = urlopen("http://news.bbc.co.uk/").read()
   >>> text = nltk.clean_html(page)
-  >>> print text[:60]
+  >>> print(text[:60])
    BBC NEWS | News Front Page News Sport Weather World Service
 \end{verbatim}}
 \end{itemize}
