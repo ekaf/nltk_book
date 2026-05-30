@@ -62,8 +62,7 @@ RSTHACKS = $(PYTHON) ../rsthacks.py
 
 .SUFFIXES: .rst .rst2 .html .pdf .errs .py
 
-html: $(HTML)
-# needs fixing: skip bibliography.html 
+html: $(HTML) bibliography.html
 
 help: usage
 usage:
@@ -135,9 +134,15 @@ revision.rst: $(CHAPTERS)
 	@echo $(BIBTEX) $*
 	@(true | $(BIBTEX) $* || (rm -f $*.pdf $*.bbl && false))
 
-bibliography.html: $(BIBTEX_FILE) bib_template.html
-	cp bib_template.html $@
-	$(BIB2XHTML) $< $@
+
+# bibliography.html is generated only if bib2xhtml is available
+bibliography.html:
+	cp bib_template.html bibliography.html
+	if command -v bib2xhtml >/dev/null 2>&1; then \
+	bib2xhtml -s named ../refs.bib bibliography.html; \
+	else \
+	echo "Skipping bibliography.html: bib2xhtml not installed"; \
+	fi
 
 # bibliography.xml: bibliography.html bibliography.xsl
 #	$(XSLT) -in bibliography.html -xsl bibliography.xsl > bibliography.xml
