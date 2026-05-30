@@ -11,11 +11,11 @@ def process(file, format):
     # sentinel (NLTK >= 3.10). See: https://github.com/nltk/nltk/pull/3522
     contents = open(file, 'rb').read()
     if format == "html":
-        contents = re.sub(_SCALE_RE, r'\1\2', contents)
+        contents = re.sub(_SCALE_RE, br'\1\2', contents)
     elif format == "latex":
-        contents = re.sub(_SCALE_RE, r'\1\3', contents)
+        contents = re.sub(_SCALE_RE, br'\1\3', contents)
     elif format == "xml":
-        contents = re.sub(_SCALE_RE, r'\1\4', contents)
+        contents = re.sub(_SCALE_RE, br'\1\4', contents)
     open(file + "2", 'wb').write(contents)
 
 parser = OptionParser()

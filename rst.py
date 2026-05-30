@@ -39,7 +39,10 @@ operator.isSequenceType = lambda x:isinstance(x, collections.Sequence)
 
 import re, os.path, textwrap, sys, pickle
 from optparse import OptionParser
-from tree2image import tree_to_image
+try:
+    from tree2image import tree_to_image
+except Exception:
+    tree_to_image = None
 
 import docutils.core, docutils.nodes, docutils.io
 from docutils.writers import Writer
@@ -218,11 +221,15 @@ def tree_directive(name, arguments, options, content, lineno,
         assert 0, 'bad output format %r' % OUTPUT_FORMAT
     if not os.path.exists(TREE_IMAGE_DIR):
         os.mkdir(TREE_IMAGE_DIR)
+    if tree_to_image is None:
+        warning('Tree rendering unavailable (missing tkinter); '
+                'using text fallback.')
+        return [example(text, text)]
+
     try:
         filename = os.path.join(TREE_IMAGE_DIR, filename)
         tree_to_image(text, filename, density)
     except Exception as e:
-        raise
         warning('Error parsing tree: %s\n%s\n%s' % (e, text, filename))
         return [example(text, text)]
 
@@ -1466,9 +1473,13 @@ class UnindentDoctestVisitor(docutils.nodes.NodeVisitor):
 ######################################################################
 #{ HTML Output
 ######################################################################
-from epydoc.docwriter.html_colorize import PythonSourceColorizer
-import epydoc.docwriter.html_colorize
-epydoc.docwriter.html_colorize .PYSRC_EXPANDTO_JAVASCRIPT = ''
+try:
+    from epydoc.docwriter.html_colorize import PythonSourceColorizer
+    import epydoc.docwriter.html_colorize
+    epydoc.docwriter.html_colorize .PYSRC_EXPANDTO_JAVASCRIPT = ''
+except Exception:
+    class PythonSourceColorizer:
+        pass
 
 class CustomizedHTMLWriter(HTMLWriter):
     settings_defaults = HTMLWriter.settings_defaults.copy()
@@ -2067,7 +2078,6 @@ class CustomizedLaTeXTranslator(LaTeXTranslator):
         text = ''.join(('%s' % c) for c in node)
         text = textwrap.dedent(text)
         text = strip_doctest_directives(text)
-        text = text.decode('latin1')
         colorizer = LaTeXDoctestColorizer(self.encode, wrap=False,
                                           callouts=node['callouts'])
         self.literal = True
@@ -2276,7 +2286,22 @@ class CustomizedLaTeXTranslator(LaTeXTranslator):
 ######################################################################
 
 # [xx] Note: requires the very latest svn version of epydoc!
-from epydoc.markup.doctest import DoctestColorizer
+try:
+    from epydoc.markup.doctest import DoctestColorizer
+except Exception:
+    class DoctestColorizer:
+        PREFIX = ''
+        SUFFIX = ''
+
+        def colorize_doctest(self, text):
+            return '%s%s%s' % (self.PREFIX, self.markup(text, 'other'),
+                               self.SUFFIX)
+
+        def colorize_codeblock(self, text):
+            return self.colorize_doctest(text)
+
+        def colorize_inline(self, text):
+            return self.markup(text, 'other')
 
 class HTMLDoctestColorizer(DoctestColorizer):
     PREFIX = '<pre class="doctest">\n'
