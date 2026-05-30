@@ -43,7 +43,11 @@ operator.isSequenceType = lambda x:isinstance(x, Sequence)
 
 import re, os.path, textwrap, sys, pickle
 from optparse import OptionParser
-from tree2image import tree_to_image
+
+try:
+    from tree2image import tree_to_image
+except Exception:
+    tree_to_image = None
 
 import docutils.core, docutils.nodes, docutils.io
 from docutils.writers import Writer
@@ -222,14 +226,16 @@ def tree_directive(name, arguments, options, content, lineno,
         assert 0, 'bad output format %r' % OUTPUT_FORMAT
     if not os.path.exists(TREE_IMAGE_DIR):
         os.mkdir(TREE_IMAGE_DIR)
+    if tree_to_image is None:
+        warning('Tree rendering unavailable (missing tkinter); using text fallback.')
+        return [example(text, text)]
+
     try:
         filename = os.path.join(TREE_IMAGE_DIR, filename)
         tree_to_image(text, filename, density)
     except Exception as e:
-        raise
         warning('Error parsing tree: %s\n%s\n%s' % (e, text, filename))
         return [example(text, text)]
-
     imagenode = docutils.nodes.image(uri=filename, scale=scale, align=align)
     return [imagenode]
 
