@@ -1,1 +1,13 @@
-__pycache__
+# Files and directories that get built automatically
+
+*.errs
+*.html
+*.ref
+*.rst2
+
+pylisting
+tree_images
+
+revision.rst
+
+__pycache__/
