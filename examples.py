@@ -17,7 +17,7 @@ import sys
 # Note: nltk.pathsec (NLTK >= 3.10) restricts file access to CWD and
 # nltk.data.path. Pass only relative paths or paths within authorized
 # directories. See: https://github.com/nltk/nltk/pull/3522
-PROMPT_RE = re.compile(r'^\s*>>>\s?')
+PROMPT_RE = re.compile(r'^\s*(>>>|\.\.\.)\s?')
 
 for filename in sys.argv[1:]:
     in_code = False
