@@ -1476,10 +1476,17 @@ class UnindentDoctestVisitor(docutils.nodes.NodeVisitor):
 try:
     from epydoc.docwriter.html_colorize import PythonSourceColorizer
     import epydoc.docwriter.html_colorize
-    epydoc.docwriter.html_colorize .PYSRC_EXPANDTO_JAVASCRIPT = ''
+    epydoc.docwriter.html_colorize.PYSRC_EXPANDTO_JAVASCRIPT = ''
 except Exception:
     class PythonSourceColorizer:
-        pass
+        def colorize_doctest(self, text):
+            return text
+
+        def colorize_codeblock(self, text):
+            return text
+
+        def colorize_inline(self, text):
+            return text
 
 class CustomizedHTMLWriter(HTMLWriter):
     settings_defaults = HTMLWriter.settings_defaults.copy()
@@ -2292,6 +2299,9 @@ except Exception:
     class DoctestColorizer:
         PREFIX = ''
         SUFFIX = ''
+
+        def markup(self, text, tag):
+            return text
 
         def colorize_doctest(self, text):
             return '%s%s%s' % (self.PREFIX, self.markup(text, 'other'),
