@@ -1266,7 +1266,7 @@ be informative to subdivide the errors made by the model based on
 which types of mistake it made.  A `confusion matrix`:dt: is a table
 where each cell |ij| indicates how often label `j`:math: was
 predicted when the correct label was `i`:math:.  Thus, the diagonal
-entries (i.e., cells |ii|) indicate labels that were
+entries (i.e., cells *ii*) indicate labels that were
 correctly predicted, and the off-diagonal entries indicate errors.  In
 the following example, we generate a confusion matrix for the bigram
 tagger developed in sec-automatic-tagging_:

@@ -1887,7 +1887,7 @@ and the `ACL Anthology`:em:, which contains most of the |NLP| research literatur
 from the past 50+ years, fully indexed and freely downloadable.
 
 Some excellent introductory Linguistics textbooks are:
-[Finegan2007]_, [OGrady2004]_, [OSU2007]_.  You might like to consult
+Finegan 2007, O'Grady et al. 2004, and OSU 2007. You might like to consult
 `LanguageLog`:em:, a popular linguistics blog with occasional posts that
 use the techniques described in this book.
 

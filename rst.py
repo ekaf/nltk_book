@@ -62,6 +62,25 @@ import docutils.statemachine
 try: import PIL.Image
 except: pass
 
+import os
+from docutils.parsers.rst.directives.misc import Include
+from docutils.parsers.rst import directives
+
+class DedupInclude(Include):
+    def run(self):
+        path = self.arguments[0].strip()
+        norm = os.path.normpath(path)
+
+        if norm.endswith('definitions.rst'):
+            document = self.state.document
+            if getattr(document, '_seen_definitions_include', False):
+                return []
+            document._seen_definitions_include = True
+
+        return super().run()
+
+directives.register_directive('include', DedupInclude)
+
 LATEX_VALIGN_IS_BROKEN = True
 """Set to true to compensate for a bug in the latex writer.  I've
    submitted a patch to docutils, so hopefully this wil be fixed
@@ -2003,7 +2022,7 @@ class CustomizedLaTeXWriter(LaTeXWriter):
         'stylesheet': LATEX_STYLESHEET_PATH,
         'documentoptions': '11pt,twoside',
         'use_latex_footnotes': True,
-        'use_latex_toc': True,
+        'use_latex_toc': False,
         })
     
     def __init__(self):
@@ -2161,23 +2180,22 @@ class CustomizedLaTeXTranslator(LaTeXTranslator):
             self.body.append('\\textbf{')
         else:
             self.body.append('\\textit{')
-        
+
     def depart_idxterm(self, node):
         self.body.append('}')
-    
+
     def visit_index(self, node):
-        self.body.append('\\addcontentsline{toc}{chapter}{Subject Index}\n')
-        self.body.append('\\printindex\n')
-        raise docutils.nodes.SkipNode() # Content already processed
+        self.body.append(
+            '\\pdfbookmark[1]{Subject Index}{subject-index}\n'
+            '\\printindex\n'
+        )
+        raise docutils.nodes.SkipNode()
 
-    def visit_docinfo(self, node):
-        self.docinfo = []
-        self.docinfo.append('\\begin{tabular}{ll}\n')
+#    def visit_docinfo(self, node):
+#        LaTeXTranslator.visit_docinfo(self, node)
 
-    def depart_docinfo(self, node):
-        self.docinfo.append('\\end{tabular}\n')
-        self.body = self.docinfo + self.body
-        self.docinfo = None
+#    def depart_docinfo(self, node):
+#        LaTeXTranslator.depart_docinfo(self, node)
 
     def visit_table(self, node):
         LaTeXTranslator.visit_table(self, node)
@@ -2236,24 +2254,17 @@ class CustomizedLaTeXTranslator(LaTeXTranslator):
     def circledigit(self, n):
         return docutils.nodes.Text(chr(0x2460+n-1))
 
-    # Unfortunately, parbox doesn't interact well with alltt.  As a result,
-    # any doctest or pysrc blocks inside an adominition get wrapped oddly.
-    # To fix this, we replace the default code for visit_admonition, which
-    # uses an fbox & parbox, with code that uses a boxedminipage instead.
     def visit_admonition(self, node, name=''):
-        self.body.append('\n')
-        self.body.append('\\begin{table}[h]\n')
-        self.body.append('\\begin{minipage}[t]{8ex}\\includegraphics{../images/jigsaw.png}\\end{minipage}\n')
-        self.body.append('\\begin{minipage}[t]{\\admonitionwidth}\\begin{sffamily}\\small\\vspace*{-5ex}\n')
-        #self.body.append('\\fbox{\\parbox{\\admonitionwidth}{\n')
+        self.body.append('\n\\noindent\n')
+        self.body.append('\\begin{boxedminipage}{\\admonitionwidth}\n')
+        self.body.append('\\begin{sffamily}\\small\n')
         if name and name.lower() != 'note':
-            self.body.append('\\textbf{\\large '+ self.language.labels[name] + '}\n');
-
+            self.body.append('\\textbf{\\large ' + self.language.labels[name] + '}\\par\n')
 
     def depart_admonition(self, node=None):
-        #self.body.append('}}\n') # end parbox fbox
-        self.body.append('\\end{sffamily}\\end{minipage}\\end{table}\n');
-        
+        self.body.append('\\end{sffamily}\n')
+        self.body.append('\\end{boxedminipage}\n')
+
     #def depart_title(self, node):
     #    LaTeXTranslator.depart_title(self, node)
     #    if self.section_level == 1:
@@ -2753,9 +2764,10 @@ def main():
     filenames = [f for f in filenames if not f.endswith(REF_EXTENSION)]
 
     CustomizedLaTeXWriter.settings_defaults.update(dict(
-        documentclass = options.documentclass,
+        documentclass=options.documentclass,
         stylesheet=options.latex_stylesheet,
-        use_latex_docinfo = (options.documentclass=='book')))
+        use_latex_docinfo=False))
+
     CustomizedLaTeXWriter.settings_defaults['documentoptions'] += (
         ','+options.papersize)
 
@@ -2767,10 +2779,11 @@ def main():
     if options.bibliography:
         LOCAL_BIBLIOGRAPHY = True
         CustomizedLaTeXTranslator.foot_prefix += [
-            '\\bibliographystyle{apalike}\n',
-            '\\addcontentsline{toc}{chapter}{Bibliography}\n',
-            '\\bibliography{%s}\n' %
-            os.path.splitext(options.bibtex_file)[0]]
+    '\\pdfbookmark[1]{Bibliography}{bibliography}\n',
+    '\\bibliographystyle{apalike}\n',
+#    '\\addcontentsline{toc}{chapter}{Bibliography}\n',
+    '\\bibliography{%s}\n' % os.path.splitext(BIBTEX_FILE)[0]
+]
 
     OUTPUT_FORMAT = options.action
     if options.action == 'html':
